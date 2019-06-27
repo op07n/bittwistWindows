@@ -1,71 +1,75 @@
-version: '{branch}.{build}'
-image:
-- Visual Studio 2017
-
-# clone_folder: c:\gopath\src\github.com\adedayo\tcpscan
-
 environment:
-  global:
-    CC: gcc.exe
-  MYAPP: tcpscan
-  VERSION: ${APPVEYOR_REPO_TAG_NAME}
-  GOARCH: amd64
-  ARCH: x86_64
   matrix:
-    - platform: x64
-      configuration: Release
-      GETH_ARCH: amd64
-      MSYS2_ARCH: x86_64
-      # MSYS2_BITS: 64
-      MSYSTEM: MINGW64
-      PATH: C:\msys64\mingw64\bin\;C:\msys64\;C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\;C:\Program Files (x86)\NSIS\;%PATH% #make gcc available
-stack: go 1.11
+    - COMPILER: mingw-w64
+      PCAP_URL: https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
+      PCAP_FILE: WpdPack_4_1_2.zip
+      PCAP_EXTRACT: c:\
+      PCAP_PATH: "c:\\WpdPack\\Lib\\x64;c:\\WinDivert-1.4.3-A\\x86_64"
+      CONFIGURE: "--with-libpcap-libraries=/c/WpdPack/Lib/x64 --with-libpcap-includes=/c/WpdPack/Include --enable-windivert --with-windivert-include=/c/WinDivert-1.4.3-A/include --with-windivert-libraries=/c/WinDivert-1.4.3-A/x86_64 --enable-unittests"
+      MINGW_DIR: c:\msys64\mingw64
+      MINGW_ARCH: x86_64
+      RUST: enable
+      WINDIVERT: enable
+      UNITTESTS: enable
+      CFLAGS: -Werror -Wall -Wextra -Wno-unused-parameter -Wno-unused-function
 
-platform: x64
+    - COMPILER: mingw
+      PCAP_URL: https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
+      PCAP_FILE: WpdPack_4_1_2.zip
+      PCAP_EXTRACT: c:\
+      PCAP_PATH: "c:\\WpdPack\\Lib"
+      CONFIGURE: "--with-libpcap-libraries=/c/WpdPack/Lib --with-libpcap-includes=/c/WpdPack/Include"
+      MINGW_DIR: c:\msys64\mingw32
+      MINGW_ARCH: i686
+      RUST: enable
+      WINDIVERT: disable
+      UNITTESTS: disable
+      CFLAGS: -Werror -Wall -Wextra -Wno-unused-parameter -Wno-unused-function
+
+    - COMPILER: mingw-w64
+      PCAP_URL: https://nmap.org/npcap/dist/npcap-sdk-1.01.zip
+      PCAP_FILE: npcap-sdk-1.01.zip
+      PCAP_EXTRACT: c:\npcap\
+      PCAP_PATH: "c:\\npcap\\Lib\\x64"
+      CONFIGURE: "--with-libpcap-libraries=/c/npcap/Lib/x64 --with-libpcap-includes=/c/npcap/Include"
+      MINGW_DIR: c:\msys64\mingw64
+      MINGW_ARCH: x86_64
+      RUST: enable
+      WINDIVERT: disable
+      UNITTESTS: disable
+      CFLAGS: -Werror -Wall -Wextra -Wno-unused-parameter -Wno-unused-function
+
+before_build:
+  - set Path=%MINGW_DIR%\bin;%Path%
+  - c:\msys64\usr\bin\pacman -Su --noconfirm libyaml-devel pcre-devel jansson-devel
+  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-libyaml
+  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-pcre
+  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-rust
+  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-jansson
+  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-nss
+  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-nspr
 
 install:
-  - gcc --version
-  # - set PATH=%WIX%\bin;%PATH% #this is for WiX
-  - choco install winflexbison -y
-  - win_flex --version
-  - win_bison --version
-  - appveyor DownloadFile https://github.com/the-tcpdump-group/libpcap/archive/libpcap-1.9.0.zip
-  - dir
-  - 7z x libpcap-1.9.0.zip 
-  - move libpcap-libpcap-1.9.0 libpcap
-  - cd libpcap
-  # - choco install go-msi -y
-  # - appveyor DownloadFile http://www.winpcap.org/install/bin/WpdPack_4_1_2.zip
-  # - 7z x .\WpdPack_4_1_2.zip -oWin32
-  # - cd ..
-  # - cmake .
+  - choco install winpcap # winpcap userspace
+  - if not exist "%PCAP_FILE%" appveyor DownloadFile "%PCAP_URL%" -FileName "%PCAP_FILE%"
+  - 7z x -y -o%PCAP_EXTRACT% "%PCAP_FILE%"
+  - if "%WINDIVERT%"=="enable" appveyor DownloadFile https://reqrypt.org/download/WinDivert-1.4.3-A.zip -FileName windivert.zip 
+  - if "%WINDIVERT%"=="enable" 7z x -y -oc:\ windivert.zip
 
 build_script:
-  - type NUL >.devel
-  - md build
-  - cd build
-  # - cmake -DCMAKE_PREFIX_PATH=..\Win32\WpdPack -G"Visual Studio 12 2013" ..
-  # - msbuild -nologo  pcap.sln
-  - cmake -DCMAKE_AR=ar.exe -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_MAKE_PROGRAM=make.exe -DCMAKE_PREFIX_PATH=..\libpcap -G"MSYS Makefiles" ..
-  - msbuild /m /nologo /p:Configuration=Release pcap.sln
-  # copy file to where cgo is expecting them to be, see https://github.com/google/gopacket/blob/c5b434497bea7a3417dc45b84c70282c4a5b3b3d/pcap/pcap.go
-  - echo f | xcopy Release\pcap.exp C:\WpdPack\Lib\x64\wpcap.exp 
-  - echo f | xcopy Release\pcap.lib C:\WpdPack\Lib\x64\wpcap.lib 
-  - echo f | xcopy Release\pcap_static.lib C:\WpdPack\Lib\x64\wpcap_static.lib 
-  - echo d | xcopy ..\pcap C:\WpdPack\Include
-  - echo d | xcopy ..\pcap C:\WpdPack\Include\pcap # some files are expecting the headers under pcap directory
-  - cd ..
-  # - go get ./...
-  # - set BUILDFLAGS=-a -v -x -ldflags '-v -extldflags "-static"' #attempt to set static linker
-  # - go build %BUILDFLAGS% github.com\adedayo\tcpscan\cmd\tcpscan
-  - dir
-  
-  # - set PATH=C:\Program Files\go-msi\;%PATH% #go-msi path
-  # - go-msi make --msi tcpscan-%VERSION%-%GOARCH%.msi --version %VERSION% --arch %GOARCH%
-  - 7z a %MYAPP%-%VERSION%-Windows-%ARCH%.zip *.exe
-  - dir
+  - set Path=%MINGW_DIR%\bin;c:\msys64\usr\bin;%PCAP_PATH%;%Path%
+  make
+  make install
+  # - git clone https://github.com/OISF/libhtp -b 0.5.x
+  # - bash autogen.sh
+  # - bash configure %CONFIGURE% --disable-shared --%RUST%-rust
+  # - make -j3
+  # - ldd src\suricata
+  # - src\suricata --build-info
+  # - if "%UNITTESTS%"=="enable" src\suricata -u -l %TEMP% --fatal-unittests
 
 artifacts:
-  - path: libpcap\tcpscan*.zip
-    name: zip-x64
+  - path: '*.zip'
 
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
