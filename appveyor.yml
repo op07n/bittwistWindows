@@ -41,13 +41,13 @@ environment:
 
 before_build:
   - set Path=%MINGW_DIR%\bin;%Path%
-  - c:\msys64\usr\bin\pacman -Su --noconfirm libyaml-devel pcre-devel jansson-devel
-  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-libyaml
-  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-pcre
-  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-rust
-  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-jansson
-  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-nss
-  - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-nspr
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm libyaml-devel pcre-devel jansson-devel
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-libyaml
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-pcre
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-rust
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-jansson
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-nss
+  #   - c:\msys64\usr\bin\pacman -Su --noconfirm mingw-w64-"%MINGW_ARCH%"-nspr
 
 install:
   - choco install winpcap # winpcap userspace
