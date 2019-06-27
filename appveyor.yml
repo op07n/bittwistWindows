@@ -58,8 +58,8 @@ install:
 
 build_script:
   - set Path=%MINGW_DIR%\bin;c:\msys64\usr\bin;%PCAP_PATH%;%Path%
-  make
-  make install
+  - make
+  - make install
   # - git clone https://github.com/OISF/libhtp -b 0.5.x
   # - bash autogen.sh
   # - bash configure %CONFIGURE% --disable-shared --%RUST%-rust
