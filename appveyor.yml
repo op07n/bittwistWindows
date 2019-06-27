@@ -2,7 +2,7 @@ version: '{branch}.{build}'
 image:
 - Visual Studio 2017
 
-clone_folder: c:\gopath\src\github.com\adedayo\tcpscan
+# clone_folder: c:\gopath\src\github.com\adedayo\tcpscan
 
 environment:
   global:
