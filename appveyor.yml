@@ -1,5 +1,8 @@
 image: Visual Studio 2017
 
+build:
+  project: BittwistW.sln
+
 after_build:
   - 7z a JavaToCSharpGui.zip %APPVEYOR_BUILD_FOLDER%\bittwistWindows\bin\Debug\*.*
 
