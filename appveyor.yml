@@ -20,6 +20,7 @@ install:
  - ps: mkdir ${env:APPVEYOR_BUILD_FOLDER}/lib
  - ps: cp ${env:WPD_LIB_PATH} ${env:APPVEYOR_BUILD_FOLDER}/lib
  - CALL "%VCVARS%"
+ - SET VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140
  - choco install winpcap
 
 
