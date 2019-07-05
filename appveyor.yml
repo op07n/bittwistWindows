@@ -1,4 +1,4 @@
-image: Visual Studio 2017
+image: Visual Studio 2015
 
 
 environment:
@@ -9,7 +9,7 @@ environment:
     VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
   - TARGET: i686-pc-windows-msvc
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
-    VCVARS: "$(DevEnvDir)//..//Tools//VsDevCmd.bat"
+    VCVARS: "$(DevEnvDir)..//..//VC//bin//vcvars32.bat" 
 
 install:
  - ps: mkdir C:/dl
