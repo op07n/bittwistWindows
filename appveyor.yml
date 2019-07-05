@@ -3,6 +3,9 @@ image: Visual Studio 2017
 build:
   project: bittwist.vcxproj
 
+install:
+ - choco install winpcap
+
 after_build:
   - 7z a bittwistWindows.zip %APPVEYOR_BUILD_FOLDER%\bittwistWindows\bin\Debug\*.*
 
