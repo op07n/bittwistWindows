@@ -6,7 +6,7 @@ environment:
   matrix:
   - TARGET: x86_64-pc-windows-msvc
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/x64/Packet.lib"
-    VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
+    VCVARS: "$(DevEnvDir)..//..//Tools//VsDevCmd.bat" 
   - TARGET: i686-pc-windows-msvc
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
     VCVARS: "$(DevEnvDir)..//..//Tools//VsDevCmd.bat" 
