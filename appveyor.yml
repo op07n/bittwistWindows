@@ -9,8 +9,7 @@ environment:
     VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
   - TARGET: i686-pc-windows-msvc
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
-    VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\vcvars32.bat"
-
+    VCVARS: "$(DevEnvDir)\..\Tools\VsDevCmd.bat"
 
 install:
  - ps: mkdir C:/dl
@@ -20,7 +19,6 @@ install:
  - ps: mkdir ${env:APPVEYOR_BUILD_FOLDER}/lib
  - ps: cp ${env:WPD_LIB_PATH} ${env:APPVEYOR_BUILD_FOLDER}/lib
  - CALL "%VCVARS%"
- - SET VCTargetsPath=set VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\v141
  - choco install winpcap
 
 
