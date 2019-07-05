@@ -1,4 +1,4 @@
-image: Visual Studio 2019
+image: Visual Studio 2017
 
 
 environment:
@@ -20,7 +20,7 @@ install:
  - ps: mkdir ${env:APPVEYOR_BUILD_FOLDER}/lib
  - ps: cp ${env:WPD_LIB_PATH} ${env:APPVEYOR_BUILD_FOLDER}/lib
  - CALL "%VCVARS%"
- - SET VCTargetsPath="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\VC\VCTargets"
+ - SET VCTargetsPath="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\Common7\IDE\VC\VCTargets"
  - choco install winpcap
 
 
