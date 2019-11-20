@@ -1,4 +1,4 @@
-
+image: Visual Studio 2017
 
 environment:
 
@@ -12,9 +12,9 @@ environment:
     # VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
   - TARGET: i686-pc-windows-msvc
     APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    platform: x86
+    platform: x64
     compiler: msvc-15
-    generator: "Visual Studio 15 2017"
+    generator: "Visual Studio 15 2017 Win64"
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
     # VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\vcvars32.bat"
 
