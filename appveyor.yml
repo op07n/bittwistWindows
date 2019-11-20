@@ -1,15 +1,22 @@
-image: Visual Studio 2019
 
 
 environment:
 
   matrix:
   - TARGET: x86_64-pc-windows-msvc
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    platform: x86
+    compiler: msvc-15
+    generator: "Visual Studio 15 2017"
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/x64/Packet.lib"
-    VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
+    # VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
   - TARGET: i686-pc-windows-msvc
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    platform: x86
+    compiler: msvc-15
+    generator: "Visual Studio 15 2017"
     WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
-    VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\vcvars32.bat"
+    # VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\vcvars32.bat"
 
 
 install:
@@ -26,9 +33,13 @@ install:
 build:
   project: bittwist.vcxproj
 
+before_build:
+- if "%PLATFORM%"=="x86" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+- if "%PLATFORM%"=="x64" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
 
 after_build:
-  - 7z a bittwistWindows.zip %APPVEYOR_BUILD_FOLDER%\bittwistWindows\bin\Debug\*.*
+  - 7z a bittwistWindows.7z "%APPVEYOR_BUILD_FOLDER%\bittwistWindows\bin\Debug"
 
 artifacts:  # Archive the generated packages in the ci.appveyor.com build report.  - path: bin\Debug\*
   - path: bittwistWindows.zip
